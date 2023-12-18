@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dev-app-sample
+    app.kubernetes.io/name: dev-app-sample
+    app.openshift.io/runtime: java
+  name: dev-app-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-app-sample
+  template:
+    metadata:
+      labels:
+        app: dev-app-sample
+    spec:
+      containers:
+        - name: dev-app-sample
+          imagePullPolicy: IfNotPresent
+          image: quay.edwin.home/sno-hub_edwin-dev-gitops/dev-app-sample:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP

@@ -6,7 +6,7 @@ metadata:
 spec:
   workspaces:
     - name: source-code
-    # - name: mvn-setting    
+    - name: mvn-settings
   params:
     - name: gitUrl
       type: string
@@ -29,8 +29,6 @@ spec:
         value: "true"
       - name: revision
         value: $(params.gitBranch)
-      - name: subdirectory
-        value: "springboot-app"
       - name: sslVerify
         value: "false"      
     - name: maven-build
@@ -45,11 +43,13 @@ spec:
           - clean
           - package
           - -DskipTests
+      - name: CONTEXT_DIR
+        value: springboot-app
       workspaces:
       - name: source
         workspace: source-code
-      # - name: maven-settings
-      #   workspace: mvn-setting
+      - name: maven-settings
+        workspace: mvn-settings
     - name: build-image
       taskRef:
         name: buildah
@@ -59,6 +59,10 @@ spec:
         value: quay.edwin.home/sno-hub_edwin-dev-gitops/dev-app-sample
       - name: TLSVERIFY
         value: 'false'
+      - name: CONTEXT
+        value: springboot-app
+      # - name: DOCKERFILE
+      #   value: springboot-app/Dockerfile
       workspaces:
       - name: source
         workspace: source-code

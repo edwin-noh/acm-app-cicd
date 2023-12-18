@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maven-settings
+  namespace: edwin-dev-gitops
+data:
+  settings.xml: |
+    <settings>
+        <profiles>
+          <profile>
+              <id>central</id>
+              <repositories>
+                  <repository>
+                      <id>central</id>
+                      <url>https://repo.maven.apache.org/maven2</url>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                  </repository>
+              </repositories>
+              <pluginRepositories>
+                  <pluginRepository>
+                      <id>central</id>
+                      <url>https://repo.maven.apache.org/maven2</url>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                  </pluginRepository>
+              </pluginRepositories>
+          </profile>
+
+          <profile>
+              <id>redhat</id>
+              <repositories>
+                  <repository>
+                      <releases>
+                          <enabled>true</enabled>
+                          <updatePolicy>never</updatePolicy>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                          <updatePolicy>never</updatePolicy>
+                      </snapshots>
+                      <id>jboss-public-repository-group</id>
+                      <name>JBoss Public Repository Group</name>
+                      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+                      <layout>default</layout>
+                  </repository>
+                  <repository>
+                      <releases>
+                          <enabled>true</enabled>
+                          <updatePolicy>never</updatePolicy>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                          <updatePolicy>never</updatePolicy>
+                      </snapshots>
+                      <id>jboss-enterprise-maven-repository</id>
+                      <name>JBoss Enterprise Maven Repository</name>
+                      <url>https://maven.repository.redhat.com/ga/</url>
+                      <layout>default</layout>
+                  </repository>
+              </repositories>
+              <pluginRepositories>
+                  <pluginRepository>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                      </snapshots>
+                      <id>jboss-public-repository-group</id>
+                      <name>JBoss Public Repository Group</name>
+                      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+                  </pluginRepository>
+                  <pluginRepository>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                      </snapshots>
+                      <id>jboss-enterprise-maven-repository</id>
+                      <name>JBoss Enterprise Maven Repository</name>
+                      <url>https://maven.repository.redhat.com/ga/</url>
+                  </pluginRepository>
+              </pluginRepositories>
+          </profile>
+        </profiles>
+
+        <activeProfiles>
+            <activeProfile>central</activeProfile>
+            <activeProfile>redhat</activeProfile>
+        </activeProfiles>
+    </settings>

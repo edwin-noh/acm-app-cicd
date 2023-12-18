@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev-app
+  namespace: dev-cluster-gitops
+spec:
+  generators:
+    - clusterDecisionResource:
+        configMapRef: acm-placement
+        labelSelector:
+          matchLabels:
+            cluster.open-cluster-management.io/placement: dev-clusters
+        requeueAfterSeconds: 60
+  template:
+    metadata:
+      name: 'dev-app-{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/edwin-noh/acm-app-cicd.git
+        targetRevision: main
+        path: cd-gitops
+      destination:
+        namespace: dev-app
+        server: '{{server}}'
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - PruneLast=true
+      automated:
+        prune: true
+        selfHeal: true

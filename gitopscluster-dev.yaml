@@ -8,15 +8,14 @@
 apiVersion: apps.open-cluster-management.io/v1beta1
 kind: GitOpsCluster
 metadata:
-  name: acm-cluster-gitops
-  namespace: edwin-dev-gitops
+  name: dev-cluster-gitops
+  namespace: dev-cluster-gitops
 spec:
   # createBlankClusterSecrets: true
   argoServer:
     cluster: local-cluster
-    argoNamespace: openshift-gitops
+    argoNamespace: dev-cluster-gitops
   placementRef:
     kind: Placement
     apiVersion: cluster.open-cluster-management.io/v1beta1
     name: dev-clusters
-    namespace: openshift-gitops
