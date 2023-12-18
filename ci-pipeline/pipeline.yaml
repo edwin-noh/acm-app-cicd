@@ -1,0 +1,66 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-dev-cluster-app
+  namespace: edwin-dev-gitops
+spec:
+  workspaces:
+    - name: source-code
+    # - name: mvn-setting    
+  params:
+    - name: gitUrl
+      type: string
+      description: source code git repo URL 
+    - name: gitBranch
+      type: string
+      default: main
+  tasks:
+    - name: checkout-code
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+      - name: output
+        workspace: source-code
+      params:
+      - name: url
+        value: $(params.gitUrl)
+      - name: deleteExisting
+        value: "true"
+      - name: revision
+        value: $(params.gitBranch)
+      - name: subdirectory
+        value: "springboot-app"
+      - name: sslVerify
+        value: "false"      
+    - name: maven-build
+      taskRef:
+        name: maven
+        kind: ClusterTask
+      runAfter:
+        - checkout-code       
+      params:
+      - name: GOALS
+        value:
+          - clean
+          - package
+          - -DskipTests
+      workspaces:
+      - name: source
+        workspace: source-code
+      # - name: maven-settings
+      #   workspace: mvn-setting
+    - name: build-image
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+      - name: IMAGE
+        value: quay.edwin.home/sno-hub_edwin-dev-gitops/dev-app-sample
+      - name: TLSVERIFY
+        value: 'false'
+      workspaces:
+      - name: source
+        workspace: source-code
+      runAfter:
+      - maven-build 
